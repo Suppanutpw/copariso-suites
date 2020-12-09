@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /* Dynamic Programming Java implementation of LCS problem */
 public class PDFCompareText {
@@ -87,8 +89,7 @@ public class PDFCompareText {
         file1.setHighlightPos(findRangeForHighlight(pdfTextPos1, m));
         file2.setHighlightPos(findRangeForHighlight(pdfTextPos2, n));
 
-
-        // extends {not longest common sequence} range in full word
+        // extends {not longest common sequence} range in full word if there aren't Thai
         findRangeForHighlightWords(file1);
         findRangeForHighlightWords(file2);
     }
@@ -120,17 +121,22 @@ public class PDFCompareText {
 
     public void findRangeForHighlightWords(PDFFile file) {
         String fileText = file.getFileText();
+
+        Pattern pattern = Pattern.compile("([\\u0E00-\\u0E7F]+)");
+        Matcher matcher = pattern.matcher(fileText);
+
         ArrayList<PDFHighlightPos> pdfHighlightPos = file.getHighlightPos();
         int textSize = file.textLength(), highlight_length = pdfHighlightPos.size();
 
-        if (highlight_length == 0) {
+        // check if file is thai you don't have to expends range
+        if (highlight_length == 0 && matcher.find()) {
             return;
         }
 
         // expends position Start - End for highlight all word (highlight all word that have modified)
         for (PDFHighlightPos highlight : pdfHighlightPos) {
             // find back Start position for {not digit and alphabet}
-            for (int i = highlight.posStart; i >= 0; i--) {
+            for (int i = highlight.posStart; i >= 0 && i >= highlight.posStart - 5; i--) {
                 if (!(Character.isLetter(fileText.charAt(i)) || Character.isDigit(fileText.charAt(i)))) {
                     highlight.posStart = Math.min(highlight.posStart, i + 1);
                     break;
@@ -138,7 +144,7 @@ public class PDFCompareText {
             }
 
             // find forward Stop position for {not digit and alphabet}
-            for (int i = highlight.posStop; i < textSize; i++) {
+            for (int i = highlight.posStop; i < textSize && i < highlight.posStop + 5; i++) {
                 if (!(Character.isLetter(fileText.charAt(i)) || Character.isDigit(fileText.charAt(i)))) {
                     highlight.posStop = Math.max(highlight.posStop, i - 1);
                     break;

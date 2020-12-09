@@ -182,36 +182,37 @@ public class PDFHighlighter extends PDFTextStripper {
             minx = textPositions.get(0).getX();
             miny = textPositions.get(0).getY();
         }
-        for (int i = 0; pdfPosCounter < highlight_length && i < token_length; i++, wordCounter++) {
-            System.out.println(fileText.charAt(i) + " | " + textPositions.get(i).toString());
-            if (!isHighlight) {
-                // if highlight pen {not} put on paper
-                if (wordCounter == highlightPos.get(pdfPosCounter).posStart) {
-                    // find position to put pen on paper with highlightPos range
-                    minx = textPositions.get(i).getX();
-                    miny = textPositions.get(i).getY();
-                    isHighlight = true;
+        for (int i = 0; pdfPosCounter < highlight_length && i < token_length; i++) {
+            for (int j = 0; j < textPositions.get(i).toString().length(); j++, wordCounter++) {
+                if (!isHighlight) {
+                    // if highlight pen {not} put on paper
+                    if (wordCounter == highlightPos.get(pdfPosCounter).posStart) {
+                        // find position to put pen on paper with highlightPos range
+                        minx = textPositions.get(i).getX();
+                        miny = textPositions.get(i).getY();
+                        isHighlight = true;
 
-                    // re-find the same position for {Stop in a same position case}
-                    i--;
-                    wordCounter--;
-                }
-            } else {
-                // if highlight have put on paper
-                token += textPositions.get(i).toString();
-                if (wordCounter == highlightPos.get(pdfPosCounter).posStop) {
-                    maxx = textPositions.get(i).getEndX();
-                    maxy = textPositions.get(i).getY();
+                        // re-find the same position for {Stop in a same position case}
+                        j--;
+                        wordCounter--;
+                    }
+                } else {
+                    // if highlight have put on paper
+                    token += textPositions.get(i).toString().charAt(j);
+                    if (wordCounter == highlightPos.get(pdfPosCounter).posStop) {
+                        maxx = textPositions.get(i).getEndX();
+                        maxy = textPositions.get(i).getY();
 
-                    rotation = textPositions.get(i).getRotation();
+                        rotation = textPositions.get(i).getRotation();
 
-                    double word_coordinates[] = {minx, miny, maxx, maxy, this.getCurrentPageNo(), height, width, rotation};
-                    coordinates.add(word_coordinates);
-                    tokenStream.add(token);
-                    token = "";
+                        double word_coordinates[] = {minx, miny, maxx, maxy, this.getCurrentPageNo(), height, width, rotation};
+                        coordinates.add(word_coordinates);
+                        tokenStream.add(token);
+                        token = "";
 
-                    pdfPosCounter++;
-                    isHighlight = false;
+                        pdfPosCounter++;
+                        isHighlight = false;
+                    }
                 }
             }
         }
