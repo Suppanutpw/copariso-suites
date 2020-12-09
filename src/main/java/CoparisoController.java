@@ -51,6 +51,15 @@ public class CoparisoController extends WindowAdapter implements ListSelectionLi
         Setting.updateLog();
     }
 
+    private void closeView() {
+        if (historyView != null) {
+            historyView.dispose();
+        }
+        if (view != null) {
+            view.dispose();
+        }
+    }
+
     private void openPDFFile(JFileChooser fileChooser, JLabel label) {
         fileChooser.setDialogTitle("Choose your PDF file");
         int selectedButton = fileChooser.showDialog(view, "Open");
@@ -69,8 +78,7 @@ public class CoparisoController extends WindowAdapter implements ListSelectionLi
         try {
             oldFileViewer = new PDFViewer(new File(oldTextOnlyPath));
             newFileViewer = new PDFViewer(new File(newTextOnlyPath));
-            view.dispose();
-            historyView.dispose();
+            closeView();
             view = new CoparisoView(oldFileViewer, newFileViewer);
             init();
             view.overallBtn.addActionListener(this);
@@ -82,8 +90,7 @@ public class CoparisoController extends WindowAdapter implements ListSelectionLi
     private void overallMode() {
         try {
             overallViewer = new PDFViewer(new File(overallPath));
-            view.dispose();
-            historyView.dispose();
+            closeView();
             view = new CoparisoView(overallViewer);
             init();
             view.textOnlyBtn.addActionListener(this);

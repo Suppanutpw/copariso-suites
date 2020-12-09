@@ -30,13 +30,13 @@ public class Setting {
         // ตั้งค่าของที่อยู่ไฟล์ผลลัพธ์
         // modify result path here!!!
         // default now is ./resources
-        DEFAULT_RESULT_FILE_PATH = Paths.get(Paths.get(".").toAbsolutePath().normalize().toString(), "resources");
         DEFAULT_DATABASE_PATH = Paths.get(System.getProperty("user.home"));
         try {
-            DEFAULT_DATABASE_PATH = Paths.get(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath());
+            DEFAULT_DATABASE_PATH = Paths.get(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath()).getParent();
         } catch (URISyntaxException e) {
             JOptionPane.showMessageDialog(view, "current dir not found DB will save in : " + DEFAULT_DATABASE_PATH, "Warning Message", JOptionPane.INFORMATION_MESSAGE);
         }
+        DEFAULT_RESULT_FILE_PATH = DEFAULT_DATABASE_PATH;
         // ตั้งค่าสีไฮไลท์ของไฟล์เก่า/ใหม่
         Setting.setTextOldHighlightColor(255, 0, 0);
         Setting.setTextNewHighlightColor(0, 255, 0);

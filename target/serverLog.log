@@ -1,0 +1,13 @@
+2020-12-10 00:52 - welcome to copariso suites Power By SPW
+2020-12-10 00:52 - database file not found!
+2020-12-10 00:52 - log doesn't exists re-crate : /Users/spw/Desktop/Github/copariso-suites/target/serverLog.log (No such file or directory)
+2020-12-10 01:01 - welcome to copariso suites Power By SPW
+2020-12-10 01:02 - compare /Users/spw/oldFile.pdf and /Users/spw/newFile.pdf
+2020-12-10 01:02 - Copariso created old-new text-only compare file : /Users/spw/Desktop/older_oldFile_10-12-2020_01-02-35_newFile.pdf
+2020-12-10 01:02 - Copariso created new-old text-only compare file : /Users/spw/Desktop/newer_oldFile_10-12-2020_01-02-35_newFile.pdf
+2020-12-10 01:02 - Copariso created overall compare file : /Users/spw/Desktop/overall_oldFile_10-12-2020_01-02-35_newFile.pdf
+2020-12-10 01:02 - PDFViewer open /Users/spw/Desktop/older_oldFile_10-12-2020_01-02-35_newFile.pdf Size(612.0, 792.0) Number of pages = 3
+2020-12-10 01:02 - PDFViewer open /Users/spw/Desktop/newer_oldFile_10-12-2020_01-02-35_newFile.pdf Size(612.0, 792.0) Number of pages = 3
+2020-12-10 01:02 - compare success enjoy!
+2020-12-10 01:02 - PDFViewer open /Users/spw/Desktop/older_oldFile_10-12-2020_01-02-35_newFile.pdf Size(612.0, 792.0) Number of pages = 3
+2020-12-10 01:02 - PDFViewer open /Users/spw/Desktop/newer_oldFile_10-12-2020_01-02-35_newFile.pdf Size(612.0, 792.0) Number of pages = 3
