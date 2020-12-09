@@ -1,8 +1,11 @@
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileSystemView;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,11 +13,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
-public class CoparisoController implements ActionListener {
+public class CoparisoController extends WindowAdapter implements ListSelectionListener, ActionListener {
     public CoparisoView view;
-    private PDFViewer textOnly, overall;
-    private int guiState; // 0 - Normal, 1 - Overall, 2 - Text Only
+    private HistoryView historyView;
     private String oldTextOnlyPath;
     private String newTextOnlyPath;
     private String overallPath;
@@ -22,8 +25,12 @@ public class CoparisoController implements ActionListener {
 
     public CoparisoController() {
         view = new CoparisoView();
-        init();
+        Setting.setView(view);
         Setting.addLog("welcome to copariso suites Power By SPW");
+        Setting.setHistory(new ArrayList<CmpHistory>());
+        Setting.readDB();
+
+        init();
     }
 
     private void init() {
@@ -32,11 +39,16 @@ public class CoparisoController implements ActionListener {
         view.newBtn.addActionListener(this);
         view.resultBtn.addActionListener(this);
 
+        view.history.addActionListener(this);
         view.compareBtn.addActionListener(this);
+
+        view.addWindowListener(this);
+
+        view.resultLabel.setText(Setting.getDefaultResultPath());
 
         // init
         Setting.setView(view);
-        Setting.setReadLog(view);
+        Setting.updateLog();
     }
 
     private void openPDFFile(JFileChooser fileChooser, JLabel label) {
@@ -54,11 +66,11 @@ public class CoparisoController implements ActionListener {
     }
 
     private void textOnlyMode() {
-        guiState = 1;
         try {
             oldFileViewer = new PDFViewer(new File(oldTextOnlyPath));
             newFileViewer = new PDFViewer(new File(newTextOnlyPath));
             view.dispose();
+            historyView.dispose();
             view = new CoparisoView(oldFileViewer, newFileViewer);
             init();
             view.overallBtn.addActionListener(this);
@@ -68,10 +80,10 @@ public class CoparisoController implements ActionListener {
     }
 
     private void overallMode() {
-        guiState = 2;
         try {
             overallViewer = new PDFViewer(new File(overallPath));
             view.dispose();
+            historyView.dispose();
             view = new CoparisoView(overallViewer);
             init();
             view.textOnlyBtn.addActionListener(this);
@@ -101,6 +113,8 @@ public class CoparisoController implements ActionListener {
             Setting.addLog(file1.getErrorMessage());
             Setting.addLog(file2.getErrorMessage());
         }
+
+        Setting.addLog("compare " + file1.getTargetPath() + " and " + file2.getTargetPath());
 
         // get file name only and store for name result file
         String oldName = olderFilePath.getFileName().toString().split("[.]")[0];
@@ -134,6 +148,39 @@ public class CoparisoController implements ActionListener {
         newTextOnlyPath = file2.getResultPath();
         overallPath = overallTask.getOverallPathPDF();
         textOnlyMode();
+
+        // save All Compare File in database (Model CmpHistory)
+        dateNow = dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+        CmpHistory history = new CmpHistory(
+                dateNow,
+                olderFilePath.toString(),
+                newerFilePath.toString(),
+                oldTextOnlyPath,
+                newTextOnlyPath,
+                overallPath
+        );
+        Setting.getHistory().add(0, history);
+
+        Setting.addLog("compare success enjoy!");
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        Setting.writeLog();
+        Setting.writeDB();
+    }
+
+    //for accessing past comparison by clicking on table data
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if (!e.getValueIsAdjusting()) {
+            // show compare result history
+            oldTextOnlyPath = Setting.getHistory().get(historyView.table.getSelectedRow()).getOldTextOnlyPath();
+            newTextOnlyPath = Setting.getHistory().get(historyView.table.getSelectedRow()).getNewTextOnlyPath();
+            overallPath = Setting.getHistory().get(historyView.table.getSelectedRow()).getOverallPath();
+            textOnlyMode();
+        }
     }
 
     @Override
@@ -167,6 +214,8 @@ public class CoparisoController implements ActionListener {
             } else {
                 compare(Paths.get(view.oldLabel.getText()), Paths.get(view.newLabel.getText()));
             }
+        } else if (e.getSource().equals(view.history)) {
+            historyView = new HistoryView(this);
         } else if (e.getSource().equals(view.textOnlyBtn)) {
             textOnlyMode();
         } else if (e.getSource().equals(view.overallBtn)) {

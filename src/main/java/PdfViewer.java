@@ -87,8 +87,6 @@ public class PDFViewer {
 
         panelSelectedPage.revalidate();
         panelSelectedPage.repaint();
-
-        System.out.println(imagePanel.getPreferredSize().width + " : " + imagePanel.getPreferredSize().height);
     }
 
     private void initialize(File file) throws Exception {
@@ -98,8 +96,6 @@ public class PDFViewer {
         // Getting/calculating screen dimensions...
         Float realWidth = new Float(doc.getPage(0).getMediaBox().getWidth());
         Float realHeight = new Float(doc.getPage(0).getMediaBox().getHeight());
-
-        System.out.println(realWidth + ", " + realHeight);
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Double ratio = 0.8;
@@ -111,7 +107,7 @@ public class PDFViewer {
 
         renderer = new PDFRender(doc);
 
-        System.out.println("Number of pages = " + numberOfPages);
+        Setting.addLog("PDFViewer open " + file.getPath() + " Size(" + realWidth + ", " + realHeight + ") Number of pages = " + numberOfPages);
 
         btnFirstPage = new JButton("First Page");
         btnFirstPage.addActionListener(new ActionListener() {

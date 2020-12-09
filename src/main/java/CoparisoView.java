@@ -8,14 +8,29 @@ public class CoparisoView extends JFrame {
     public JButton resultBtn;
     public JButton compareBtn;
     public JTextArea logArea;
+    private JScrollPane logScroll;
     public JLabel oldLabel;
     public JLabel newLabel;
     public JLabel resultLabel;
     private JPanel PDFPanel, topPanel, bottomPanel;
     public JFileChooser fileChooser;
     public JButton textOnlyBtn, overallBtn;
+    private JMenuBar menuBar;
+    private JMenu copariso;
+    public JMenuItem history;
 
     public CoparisoView() {
+        setTitle("Copariso Suites");
+
+        // menu bar
+        menuBar = new JMenuBar();
+        copariso = new JMenu("Copariso");
+        history = new JMenuItem("History");
+
+        copariso.add(history);
+        menuBar.add(copariso);
+        setJMenuBar(menuBar);
+
         // top Panel
         topPanel = new JPanel(new GridLayout(2, 3));
 
@@ -42,17 +57,19 @@ public class CoparisoView extends JFrame {
         // bottom panel
         bottomPanel = new JPanel(new BorderLayout());
 
-        compareBtn = new JButton("Compare");
         logArea = new JTextArea();
+        logScroll = new JScrollPane();
+        logScroll.setViewportView(logArea);
 
+        compareBtn = new JButton("Compare");
         bottomPanel.add(compareBtn, BorderLayout.CENTER);
-        bottomPanel.add(logArea, BorderLayout.SOUTH);
+        bottomPanel.add(logScroll, BorderLayout.SOUTH);
 
         // any config
         fileChooser = new JFileChooser();
 
         logArea.setEditable(false);
-        logArea.setPreferredSize(new Dimension(-1, 150));
+        logScroll.setPreferredSize(new Dimension(-1, 150));
 
         add(topPanel, BorderLayout.NORTH);
         add(PDFPanel);

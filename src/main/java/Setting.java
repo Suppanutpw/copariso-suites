@@ -4,10 +4,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
+import javax.swing.*;
+import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -20,6 +19,7 @@ public class Setting {
     // Setting is the class for config process via GUI
     // DEFAULT_RESULT_PATH => path for save result file ex. /Users/mac/Desktop/
     private static Path DEFAULT_RESULT_FILE_PATH;
+    private static Path DEFAULT_DATABASE_PATH;
     private static PDColor OLD_DIF_COLOR;
     private static PDColor NEW_DIF_COLOR;
     private static String log = "";
@@ -30,7 +30,13 @@ public class Setting {
         // ตั้งค่าของที่อยู่ไฟล์ผลลัพธ์
         // modify result path here!!!
         // default now is ./resources
-        Setting.setDefaultResultPath(Paths.get(Paths.get(".").toAbsolutePath().normalize().toString(), "resources").toString());
+        DEFAULT_RESULT_FILE_PATH = Paths.get(Paths.get(".").toAbsolutePath().normalize().toString(), "resources");
+        DEFAULT_DATABASE_PATH = Paths.get(System.getProperty("user.home"));
+        try {
+            DEFAULT_DATABASE_PATH = Paths.get(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath());
+        } catch (URISyntaxException e) {
+            JOptionPane.showMessageDialog(view, "current dir not found DB will save in : " + DEFAULT_DATABASE_PATH, "Warning Message", JOptionPane.INFORMATION_MESSAGE);
+        }
         // ตั้งค่าสีไฮไลท์ของไฟล์เก่า/ใหม่
         Setting.setTextOldHighlightColor(255, 0, 0);
         Setting.setTextNewHighlightColor(0, 255, 0);
@@ -43,6 +49,15 @@ public class Setting {
 
     public static void setDefaultResultPath(String defaultResultPath) {
         DEFAULT_RESULT_FILE_PATH = Paths.get(defaultResultPath);
+    }
+
+    // get database path in String
+    public static String getDefaultDatabasePath() {
+        return DEFAULT_DATABASE_PATH.toString();
+    }
+
+    public static void setDefaultDatabasePath(Path defaultDatabasePath) {
+        DEFAULT_DATABASE_PATH = defaultDatabasePath;
     }
 
     // setter & getter for difference color
@@ -67,16 +82,20 @@ public class Setting {
         return OS;
     }
 
-    public static String getLog() {
-        return log;
-    }
-
     public static CoparisoView getView() {
         return view;
     }
 
     public static void setView(CoparisoView view) {
         Setting.view = view;
+    }
+
+    public static ArrayList<CmpHistory> getHistory() {
+        return history;
+    }
+
+    public static void setHistory(ArrayList<CmpHistory> history) {
+        Setting.history = history;
     }
 
     public static void addLog(String log) {
@@ -86,28 +105,17 @@ public class Setting {
 
         Setting.log += dateNow + " - " + log + "\n";
         System.out.println(dateNow + " - " + log);
+        updateLog();
     }
 
-    public static void setReadLog(CoparisoView view) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    view.logArea.setText(log);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        addLog("log reader Interrupted : " + ex.getMessage());
-                    }
-                }
-            }
-        }).start();
+    public static void updateLog() {
+        view.logArea.setText(Setting.log);
     }
 
     public static void writeLog() {
         // write Server log file
         String fileLog = "";
-        try (Reader reader = new FileReader("serverLog.log")) {
+        try (Reader reader = new FileReader(Paths.get(getDefaultDatabasePath(), "serverLog.log").toString())) {
             int ch = 0;
             while ((ch = reader.read()) != -1) {
                 fileLog += (char) ch;
@@ -116,28 +124,29 @@ public class Setting {
             addLog("log doesn't exists re-crate : " + ex.getMessage());
         }
 
-        try (FileWriter writeFile = new FileWriter("serverLog.log")) {
+        try (FileWriter writeFile = new FileWriter(Paths.get(getDefaultDatabasePath(), "serverLog.log").toString())) {
             // Constructs a FileWriter given a file name, using the platform's default charset
             if (!fileLog.equals("null")) {
                 log = fileLog + log;
             }
             writeFile.write(log);
         } catch (IOException ex) {
-            System.out.println("write serverLog error : " + ex.getMessage());
+            ex.printStackTrace();
         }
     }
 
-    public static void readDB() {
+    public static boolean readDB() {
 
         history = new ArrayList();
         JSONParser parser = new JSONParser();
 
         // read JSON form clientDB.json
-        try (Reader reader = new FileReader("clientDB.json")) {
+        try (Reader reader = new FileReader(Paths.get(getDefaultDatabasePath(), "clientDB.json").toString())) {
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
 
             // System.out.println(jsonObject.toJSONString());
             DEFAULT_RESULT_FILE_PATH = Paths.get((String) jsonObject.get("resultPath"));
+            DEFAULT_DATABASE_PATH = Paths.get((String) jsonObject.get("dbPath"));
 
             // fetch Compare History Array in JSONArray and then add to jsonObject
             JSONArray cmp = (JSONArray) jsonObject.get("cmp");
@@ -154,8 +163,10 @@ public class Setting {
                 ));
             }
         } catch (Exception ex) {
-            System.out.println("database file not found!");
+            Setting.addLog("database file not found!");
+            return false;
         }
+        return true;
     }
 
     public static void writeDB() {
@@ -163,6 +174,7 @@ public class Setting {
 
         // add static setting in object
         jsonObject.put("resultPath", DEFAULT_RESULT_FILE_PATH.toString());
+        jsonObject.put("dbPath", DEFAULT_DATABASE_PATH.toString());
 
         // add Compare History Array in JSONArray and then add to dbObj
         JSONArray cmp = new JSONArray();
@@ -180,11 +192,11 @@ public class Setting {
         jsonObject.put("cmp", cmp);
 
         // write JSON to database file
-        try (FileWriter file = new FileWriter("clientDB.json")) {
+        try (FileWriter file = new FileWriter(Paths.get(getDefaultDatabasePath(), "clientDB.json").toString())) {
             // Constructs a FileWriter given a file name, using the platform's default charset
             file.write(jsonObject.toJSONString());
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 }
