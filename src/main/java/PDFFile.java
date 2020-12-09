@@ -36,7 +36,6 @@ public class PDFFile {
         try {
             // get PDF text file
             fileText = toText();
-            errorMessage = null;
         } catch (Exception ex) {
             // if there have error you can get cause message
             errorMessage = ex.getMessage();

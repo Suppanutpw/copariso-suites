@@ -1,12 +1,20 @@
 import de.redsix.pdfcompare.PdfComparator;
 
+import javax.swing.*;
 import java.nio.file.Paths;
 
-public class PDFOverallCompare {
+public class PDFOverallCompare implements Runnable {
 
     private PdfComparator overallCmp;
     private String errorMessage;
     private String overallFileName;
+    private PDFFile olderFilePath, newerFilePath;
+
+    public PDFOverallCompare(PDFFile olderFilePath, PDFFile newerFilePath, String overallFileName) {
+        this.olderFilePath = olderFilePath;
+        this.newerFilePath = newerFilePath;
+        this.overallFileName = overallFileName;
+    }
 
     public boolean pdfCompare(PDFFile file1, PDFFile file2) {
         try {
@@ -38,11 +46,15 @@ public class PDFOverallCompare {
         return Paths.get(Setting.getDefaultResultPath(), overallFileName + ".pdf").toString();
     }
 
-    public void setOverallFileName(String overallFileName) {
-        this.overallFileName = overallFileName;
-    }
-
     public String getErrorMessage() {
         return errorMessage;
+    }
+
+    @Override
+    public void run() {
+        if (!pdfCompare(olderFilePath, newerFilePath)) {
+            Setting.addLog("Overall Compare Error : " + errorMessage);
+            JOptionPane.showMessageDialog(Setting.getView(), "Overall Compare Error " + errorMessage , "Error Message", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 }

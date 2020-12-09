@@ -22,8 +22,9 @@ public class Setting {
     private static Path DEFAULT_RESULT_FILE_PATH;
     private static PDColor OLD_DIF_COLOR;
     private static PDColor NEW_DIF_COLOR;
-    private static String log = "================================================== open copariso server ==================================================\n";
+    private static String log = "";
     private static ArrayList<CmpHistory> history;
+    private static CoparisoView view;
 
     static {
         // ตั้งค่าของที่อยู่ไฟล์ผลลัพธ์
@@ -70,6 +71,14 @@ public class Setting {
         return log;
     }
 
+    public static CoparisoView getView() {
+        return view;
+    }
+
+    public static void setView(CoparisoView view) {
+        Setting.view = view;
+    }
+
     public static void addLog(String log) {
         // add Date for check error log message
         LocalDateTime dateTime = LocalDateTime.now();
@@ -79,12 +88,12 @@ public class Setting {
         System.out.println(dateNow + " - " + log);
     }
 
-    public static void setReadLog(CoparisoView gui) {
+    public static void setReadLog(CoparisoView view) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
-                    // gui.getLogArea().setText(log);
+                    view.logArea.setText(log);
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ex) {
