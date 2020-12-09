@@ -26,7 +26,7 @@ public class CoparisoController extends WindowAdapter implements ListSelectionLi
     public CoparisoController() {
         view = new CoparisoView();
         Setting.setView(view);
-        Setting.addLog("welcome to copariso suites Power By SPW");
+        Setting.addLog("open Copariso Suites successfully");
         Setting.setHistory(new ArrayList<CmpHistory>());
         Setting.readDB();
 
@@ -174,6 +174,7 @@ public class CoparisoController extends WindowAdapter implements ListSelectionLi
 
     @Override
     public void windowClosing(WindowEvent e) {
+        Setting.addLog("close Copariso Suites successfully");
         Setting.writeLog();
         Setting.writeDB();
     }

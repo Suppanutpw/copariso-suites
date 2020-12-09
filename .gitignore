@@ -2,3 +2,4 @@
 .DS_Store
 out/artifacts/copariso_jar/clientDB.json
 out/artifacts/copariso_jar/serverLog.log
+.DS_Store

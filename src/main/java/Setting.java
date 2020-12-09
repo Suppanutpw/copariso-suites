@@ -163,7 +163,7 @@ public class Setting {
                 ));
             }
         } catch (Exception ex) {
-            Setting.addLog("database file not found!");
+            Setting.addLog("Welcome to Copariso Suites Power By SPW");
             return false;
         }
         return true;
