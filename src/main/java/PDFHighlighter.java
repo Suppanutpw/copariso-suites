@@ -183,6 +183,7 @@ public class PDFHighlighter extends PDFTextStripper {
             miny = textPositions.get(0).getY();
         }
         for (int i = 0; pdfPosCounter < highlight_length && i < token_length; i++, wordCounter++) {
+            System.out.println(fileText.charAt(i) + " | " + textPositions.get(i).toString());
             if (!isHighlight) {
                 // if highlight pen {not} put on paper
                 if (wordCounter == highlightPos.get(pdfPosCounter).posStart) {
