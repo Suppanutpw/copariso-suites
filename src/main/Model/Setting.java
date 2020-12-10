@@ -113,9 +113,9 @@ public class Setting {
     }
 
     public static void writeLog() {
-        // write Server log file
+        // write copariso log file
         String fileLog = "";
-        try (Reader reader = new FileReader(Paths.get(getDefaultDatabasePath(), "serverLog.log").toString())) {
+        try (Reader reader = new FileReader(Paths.get(getDefaultDatabasePath(), "coparisoLog.log").toString())) {
             int ch = 0;
             while ((ch = reader.read()) != -1) {
                 fileLog += (char) ch;
@@ -124,7 +124,7 @@ public class Setting {
             addLog("log doesn't exists re-crate : " + ex.getMessage());
         }
 
-        try (FileWriter writeFile = new FileWriter(Paths.get(getDefaultDatabasePath(), "serverLog.log").toString())) {
+        try (FileWriter writeFile = new FileWriter(Paths.get(getDefaultDatabasePath(), "coparisoLog.log").toString())) {
             // Constructs a FileWriter given a file name, using the platform's default charset
             if (!fileLog.equals("null")) {
                 log = fileLog + log;
@@ -140,8 +140,8 @@ public class Setting {
         history = new ArrayList();
         JSONParser parser = new JSONParser();
 
-        // read JSON form clientDB.json
-        try (Reader reader = new FileReader(Paths.get(getDefaultDatabasePath(), "clientDB.json").toString())) {
+        // read JSON form coparisoDB.json
+        try (Reader reader = new FileReader(Paths.get(getDefaultDatabasePath(), "coparisoDB.json").toString())) {
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
 
             // System.out.println(jsonObject.toJSONString());
@@ -192,7 +192,7 @@ public class Setting {
         jsonObject.put("cmp", cmp);
 
         // write JSON to database file
-        try (FileWriter file = new FileWriter(Paths.get(getDefaultDatabasePath(), "clientDB.json").toString())) {
+        try (FileWriter file = new FileWriter(Paths.get(getDefaultDatabasePath(), "coparisoDB.json").toString())) {
             // Constructs a FileWriter given a file name, using the platform's default charset
             file.write(jsonObject.toJSONString());
         } catch (IOException ex) {
