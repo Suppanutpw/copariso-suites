@@ -94,9 +94,10 @@ public class CoparisoView extends JFrame {
 
         manageBtnPanel = new JPanel(new GridLayout(2, 1));
 
-        pageBtnPanel = new JPanel(new GridLayout(1, 4));
+        pageBtnPanel = new JPanel(new GridLayout(1, 5));
         pageBtnPanel.add(pdfViewer.btnFirstPage);
         pageBtnPanel.add(pdfViewer.btnPreviousPage);
+        pageBtnPanel.add(pdfViewer.txtPageNumber);
         pageBtnPanel.add(pdfViewer.btnNextPage);
         pageBtnPanel.add(pdfViewer.btnLastPage);
 
@@ -128,14 +129,16 @@ public class CoparisoView extends JFrame {
 
         manageBtnPanel = new JPanel(new GridLayout(2, 1));
 
-        pageBtnPanel = new JPanel(new GridLayout(1, 8));
+        pageBtnPanel = new JPanel(new GridLayout(1, 10));
         pageBtnPanel.add(pdfViewer1.btnFirstPage);
         pageBtnPanel.add(pdfViewer1.btnPreviousPage);
+        pageBtnPanel.add(pdfViewer1.txtPageNumber);
         pageBtnPanel.add(pdfViewer1.btnNextPage);
         pageBtnPanel.add(pdfViewer1.btnLastPage);
 
         pageBtnPanel.add(pdfViewer2.btnFirstPage);
         pageBtnPanel.add(pdfViewer2.btnPreviousPage);
+        pageBtnPanel.add(pdfViewer2.txtPageNumber);
         pageBtnPanel.add(pdfViewer2.btnNextPage);
         pageBtnPanel.add(pdfViewer2.btnLastPage);
 
