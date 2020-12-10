@@ -145,7 +145,7 @@ public class CoparisoController extends WindowAdapter implements ListSelectionLi
 
         String oldTextOnlyFileName = "older_" + oldName + dateNow + newName + ".pdf";
         String newTextOnlyFileName = "newer_" + oldName + dateNow + newName + ".pdf";
-        String overallFileName = "overall_" + oldName + dateNow + newName + ".pdf";
+        String overallFileName = "overall_" + oldName + dateNow + newName; // don't have to put .pdf
 
         // set unique file name with date for fix duplicate file name
         file1.setResultFileName(oldTextOnlyFileName);
@@ -161,8 +161,7 @@ public class CoparisoController extends WindowAdapter implements ListSelectionLi
         textOnlyCmp.start();
         overallCmp.start();
 
-        while (textOnlyCmp.isAlive() || overallCmp.isAlive()) {
-        }
+        while (textOnlyCmp.isAlive() || overallCmp.isAlive()) {}
 
         oldTextOnlyPath = file1.getResultPath();
         newTextOnlyPath = file2.getResultPath();

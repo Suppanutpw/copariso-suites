@@ -22,7 +22,7 @@ public class PDFOverallCompare implements Runnable {
             overallCmp = new PdfComparator(file2.getTargetPath(), file1.getTargetPath());
             overallCmp.compare().writeTo(getOverallPath());
 
-            Setting.addLog("Copariso created overall compare file : " + getOverallPath());
+            Setting.addLog("Copariso created overall compare file : " + getOverallPathPDF());
 
             // if there no error here so return null
             errorMessage = null;
