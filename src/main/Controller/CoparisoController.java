@@ -25,7 +25,13 @@ public class CoparisoController extends WindowAdapter implements ListSelectionLi
 
     // initial code when open in first time
     public CoparisoController() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "UIManager Set Look and Feel Error", "Warning Message", JOptionPane.INFORMATION_MESSAGE);
+        }
         view = new CoparisoView();
+
         Setting.setView(view);
         Setting.addLog("open Copariso Suites successfully");
         Setting.setHistory(new ArrayList<CmpHistory>());

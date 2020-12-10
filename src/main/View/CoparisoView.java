@@ -91,6 +91,7 @@ public class CoparisoView extends JFrame {
 
         scrollPane = new JScrollPane(pdfViewer.panelSelectedPage);
         scrollPane.setPreferredSize(new Dimension(pdfViewer.getWidth(), 500));
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         manageBtnPanel = new JPanel(new GridLayout(2, 1));
 
@@ -123,9 +124,11 @@ public class CoparisoView extends JFrame {
 
         scrollPane1 = new JScrollPane(pdfViewer1.panelSelectedPage);
         scrollPane1.setPreferredSize(new Dimension(pdfViewer1.getWidth(), 500));
+        scrollPane1.getVerticalScrollBar().setUnitIncrement(16);
 
         scrollPane2 = new JScrollPane(pdfViewer2.panelSelectedPage);
         scrollPane2.setPreferredSize(new Dimension(pdfViewer2.getWidth(), 500));
+        scrollPane2.getVerticalScrollBar().setUnitIncrement(16);
 
         manageBtnPanel = new JPanel(new GridLayout(2, 1));
 
