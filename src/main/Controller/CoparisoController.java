@@ -23,6 +23,7 @@ public class CoparisoController extends WindowAdapter implements ListSelectionLi
     private String overallPath;
     private PDFViewer oldFileViewer, newFileViewer, overallViewer;
 
+    // initial code when open in first time
     public CoparisoController() {
         view = new CoparisoView();
         Setting.setView(view);
@@ -33,6 +34,7 @@ public class CoparisoController extends WindowAdapter implements ListSelectionLi
         init();
     }
 
+    // initial code when restart user view
     private void init() {
         // action handler
         view.oldBtn.addActionListener(this);
