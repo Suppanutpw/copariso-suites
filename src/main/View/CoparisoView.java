@@ -8,17 +8,18 @@ public class CoparisoView extends JFrame {
     public JButton resultBtn;
     public JButton compareBtn;
     public JTextArea logArea;
-    private JScrollPane logScroll;
     public JLabel oldLabel;
     public JLabel newLabel;
     public JLabel resultLabel;
-    private JPanel PDFPanel, topPanel, bottomPanel;
     public JFileChooser fileChooser;
     public JButton textOnlyBtn, overallBtn;
+    public JMenuItem history;
+    private JScrollPane logScroll;
+    private JPanel PDFPanel, topPanel, bottomPanel;
     private JMenuBar menuBar;
     private JMenu copariso;
-    public JMenuItem history;
 
+    // Main GUI
     public CoparisoView() {
         setTitle("Copariso Suites");
 

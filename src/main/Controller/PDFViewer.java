@@ -1,35 +1,34 @@
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import org.apache.pdfbox.pdmodel.PDDocument;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
-import org.apache.pdfbox.pdmodel.PDDocument;
-
 public class PDFViewer {
 
-    private PDFRender renderer;
     public JPanel panelSelectedPage;
-
-    private int numberOfPages;
-    private int currentPageIndex = 0;
-
-    private int width;
-    private int height;
-
     public JTextField txtPageNumber;
     public JButton btnLastPage;
     public JButton btnNextPage;
     public JButton btnPreviousPage;
     public JButton btnFirstPage;
+    private PDFRender renderer;
+    private int numberOfPages;
+    private int currentPageIndex = 0;
+    private int width;
+    private int height;
+
+    // This is a Java class that uses PDFBox API to read and render PDF file's contents on a swing component.
+    // thank you code from https://github.com/vakho10/Java-PDF-Viewer
+    // i adapt it from show PDF (in class) JFrame to show it in JPanel in my view
+    public PDFViewer(File document) throws Exception {
+        initialize(document);
+    }
 
     private void enableDisableButtons(int actionIndex) {
         switch (actionIndex) {
@@ -53,10 +52,7 @@ public class PDFViewer {
         }
     }
 
-    public PDFViewer(File document) throws Exception {
-        initialize(document);
-    }
-
+    // convert PDF to image and show selectPage
     private void selectPage(int pageIndex) {
         BufferedImage renderImage = null;
 
@@ -109,6 +105,7 @@ public class PDFViewer {
 
         Setting.addLog("PDFViewer open " + file.getPath() + " Size(" + realWidth + ", " + realHeight + ") Number of pages = " + numberOfPages);
 
+        // event in PDFViewer
         btnFirstPage = new JButton("First Page");
         btnFirstPage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {

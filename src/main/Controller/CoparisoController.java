@@ -51,6 +51,7 @@ public class CoparisoController extends WindowAdapter implements ListSelectionLi
         Setting.updateLog();
     }
 
+    // close view when it not null (i use to restart view)
     private void closeView() {
         if (historyView != null) {
             historyView.dispose();
@@ -60,6 +61,7 @@ public class CoparisoController extends WindowAdapter implements ListSelectionLi
         }
     }
 
+    // choose .pdf file
     private void openPDFFile(JFileChooser fileChooser, JLabel label) {
         fileChooser.setDialogTitle("Choose your PDF file");
         int selectedButton = fileChooser.showDialog(view, "Open");
@@ -74,6 +76,7 @@ public class CoparisoController extends WindowAdapter implements ListSelectionLi
         }
     }
 
+    // change view for Text-Only Compare Mode
     private void textOnlyMode() {
         try {
             oldFileViewer = new PDFViewer(new File(oldTextOnlyPath));
@@ -87,6 +90,7 @@ public class CoparisoController extends WindowAdapter implements ListSelectionLi
         }
     }
 
+    // change view for Overall Compare Mode
     private void overallMode() {
         try {
             overallViewer = new PDFViewer(new File(overallPath));
@@ -149,7 +153,8 @@ public class CoparisoController extends WindowAdapter implements ListSelectionLi
         textOnlyCmp.start();
         overallCmp.start();
 
-        while (textOnlyCmp.isAlive() || overallCmp.isAlive()) {}
+        while (textOnlyCmp.isAlive() || overallCmp.isAlive()) {
+        }
 
         oldTextOnlyPath = file1.getResultPath();
         newTextOnlyPath = file2.getResultPath();
@@ -172,6 +177,7 @@ public class CoparisoController extends WindowAdapter implements ListSelectionLi
         Setting.addLog("compare success enjoy!");
     }
 
+    // save DB when window close
     @Override
     public void windowClosing(WindowEvent e) {
         Setting.addLog("close Copariso Suites successfully");

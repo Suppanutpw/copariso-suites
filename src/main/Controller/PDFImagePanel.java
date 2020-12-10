@@ -1,8 +1,6 @@
-import java.awt.Graphics;
-import java.awt.Image;
-
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.*;
 
 public class PDFImagePanel extends JPanel {
 

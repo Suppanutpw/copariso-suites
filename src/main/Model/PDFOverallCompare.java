@@ -54,7 +54,7 @@ public class PDFOverallCompare implements Runnable {
     public void run() {
         if (!pdfCompare(olderFilePath, newerFilePath)) {
             Setting.addLog("Overall Compare Error : " + errorMessage);
-            JOptionPane.showMessageDialog(Setting.getView(), "Overall Compare Error " + errorMessage , "Error Message", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(Setting.getView(), "Overall Compare Error " + errorMessage, "Error Message", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 }

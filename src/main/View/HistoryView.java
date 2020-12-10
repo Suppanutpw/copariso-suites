@@ -1,6 +1,4 @@
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -10,6 +8,7 @@ public class HistoryView extends JFrame {
     public JTable table;
     private String[][] data;
 
+    // view for show compare history
     public HistoryView(CoparisoController controller) {
         this.setLayout(new BorderLayout());
         this.setTitle("Copariso History");

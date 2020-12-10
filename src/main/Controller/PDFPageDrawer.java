@@ -1,10 +1,10 @@
-import java.awt.Paint;
-import java.io.IOException;
-
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.rendering.PageDrawer;
 import org.apache.pdfbox.rendering.PageDrawerParameters;
+
+import java.awt.*;
+import java.io.IOException;
 
 public class PDFPageDrawer extends PageDrawer {
 

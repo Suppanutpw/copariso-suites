@@ -128,26 +128,28 @@ public class PDFCompareText {
         ArrayList<PDFHighlightPos> pdfHighlightPos = file.getHighlightPos();
         int textSize = file.textLength(), highlight_length = pdfHighlightPos.size();
 
-        // check if file is thai you don't have to expends range
-        if (highlight_length == 0 && matcher.find()) {
+        if (highlight_length == 0) {
             return;
         }
 
+        // check if file is thai you don't have to expends range
         // expends position Start - End for highlight all word (highlight all word that have modified)
-        for (PDFHighlightPos highlight : pdfHighlightPos) {
-            // find back Start position for {not digit and alphabet}
-            for (int i = highlight.posStart; i >= 0 && i >= highlight.posStart - 5; i--) {
-                if (!(Character.isLetter(fileText.charAt(i)) || Character.isDigit(fileText.charAt(i)))) {
-                    highlight.posStart = Math.min(highlight.posStart, i + 1);
-                    break;
+        if (!matcher.find()) {
+            for (PDFHighlightPos highlight : pdfHighlightPos) {
+                // find back Start position for {not digit and alphabet}
+                for (int i = highlight.posStart; i >= 0 && i >= highlight.posStart - 5; i--) {
+                    if (!(Character.isLetter(fileText.charAt(i)) || Character.isDigit(fileText.charAt(i)))) {
+                        highlight.posStart = Math.min(highlight.posStart, i + 1);
+                        break;
+                    }
                 }
-            }
 
-            // find forward Stop position for {not digit and alphabet}
-            for (int i = highlight.posStop; i < textSize && i < highlight.posStop + 5; i++) {
-                if (!(Character.isLetter(fileText.charAt(i)) || Character.isDigit(fileText.charAt(i)))) {
-                    highlight.posStop = Math.max(highlight.posStop, i - 1);
-                    break;
+                // find forward Stop position for {not digit and alphabet}
+                for (int i = highlight.posStop; i < textSize && i < highlight.posStop + 5; i++) {
+                    if (!(Character.isLetter(fileText.charAt(i)) || Character.isDigit(fileText.charAt(i)))) {
+                        highlight.posStop = Math.max(highlight.posStop, i - 1);
+                        break;
+                    }
                 }
             }
         }
@@ -160,11 +162,11 @@ public class PDFCompareText {
             pdfHighlightPos.get(highlight_length - 1).posStop = textSize - 2;
         }
 
-        // fix overlap range because of expends range for word
+        // fix overlap or neighbor range because of expends range for word
         for (int i = 0; i < pdfHighlightPos.size() - 1; i++) {
             // if Stop position of current range overlap with Start of next range
-            // or distance between Stop position of current range and with Start of next range <= 5
-            if (Math.abs(pdfHighlightPos.get(i).posStop - pdfHighlightPos.get(i + 1).posStart) <= 5
+            // or distance between Stop position of current range and with Start of next range <= 6
+            if (Math.abs(pdfHighlightPos.get(i).posStop - pdfHighlightPos.get(i + 1).posStart) <= 6
                     || pdfHighlightPos.get(i + 1).posStart <= pdfHighlightPos.get(i).posStop) {
                 // then combine it together (combine in current range and delete next range)
                 pdfHighlightPos.get(i).posStop = pdfHighlightPos.get(i + 1).posStop;

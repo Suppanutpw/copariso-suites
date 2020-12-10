@@ -49,7 +49,7 @@ public class PDFTextOnlyCompare implements Runnable {
     @Override
     public void run() {
         if (!pdfCompare()) {
-            JOptionPane.showMessageDialog(Setting.getView(), "Text-only Error : " + errorMessage , "Error Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Setting.getView(), "Text-only Error : " + errorMessage, "Error Message", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
